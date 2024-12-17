@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-import connectDB from './db/index.js';
+import { connectDB } from './config/db.js';
 
 const app = express();
 
@@ -12,10 +12,10 @@ const port = process.env.PORT || 4000;
 connectDB()
     .then(() => {
         app.listen(port, () => {
-            console.log(`IISPPR Server is running at port : ${port}`);
+            console.log(`Server is running at port : ${port}`);
         })
         app.get("/", (req, res) => {
-            res.send("Server is up and running!");
+            res.send("IISPPR Server is up and running!");
         });
         app.on("error", (error) => {
             console.log(`ERRR : ${error}`);
