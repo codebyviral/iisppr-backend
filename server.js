@@ -8,15 +8,14 @@ app.use(express.json());
 dotenv.config({ path: "./env" });
 
 const port = process.env.PORT || 4000;
-
+app.get("/", (req, res) => {
+    res.send("IISPPR Server is up and running!");
+});
 connectDB()
     .then(() => {
         app.listen(port, () => {
             console.log(`Server is running at port : ${port}`);
         })
-        app.get("/", (req, res) => {
-            res.send("IISPPR Server is up and running!");
-        });
         app.on("error", (error) => {
             console.log(`ERRR : ${error}`);
             throw error
