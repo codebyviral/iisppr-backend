@@ -10,9 +10,11 @@ export const signupValidation = (req, res, next) => {
         mnumber: Joi.number().required(),
         email: Joi.string().email().required(),
         password: Joi.string().min(6).required(),
-        rpassword: Joi.string().min(6).required(),
+        rpassword: Joi.string().valid(Joi.ref('password')).required().messages({
+            'any.only': 'Passwords must match'
+        }), // Ensures rpassword matches password
         role: Joi.string().valid('admin', 'manager', 'intern').default('intern'),
-    });
+    }).strict(); // This ensures that only the defined fields are allowed
 
     const { error } = schema.validate(req.body);
     if (error) {
@@ -28,8 +30,8 @@ export const loginValidation = (req, res, next) => {
 
     const schema = Joi.object({
         email: Joi.string().email().required(),
-        password: Joi.string().min(4).max(100).required()
-    });
+        password: Joi.string().min(6).required()
+    }).strict(); // This ensures that only the defined fields are allowed
 
     const { error } = schema.validate(req.body);
     if (error) {
