@@ -18,6 +18,7 @@ export const signupValidation = (req, res, next) => {
 
     const { error } = schema.validate(req.body);
     if (error) {
+        console.log(`Auth Validation Error: ${error}`)
         return res.status(400)
             .json({ message: "Bad request", error: error.details });
     }
