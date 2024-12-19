@@ -1,10 +1,12 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../Models/User.js';
+import moment from 'moment';
+
 const secretKey = process.env.JWT_SECRET
 export const signup = async (req, res) => {
     try {
-        const { name, email, password, rpassword, mnumber, role } = req.body;
+        const { name, email, password, rpassword, mnumber, role, startDate } = req.body;
 
         // Check if passwords match
         if (password !== rpassword) {
@@ -28,6 +30,7 @@ export const signup = async (req, res) => {
             password: hashedPassword,
             mnumber,
             role,
+            startDate,
         });
 
         await newUser.save();
@@ -35,7 +38,7 @@ export const signup = async (req, res) => {
         // Generate token
         const token = jwt.sign(
             { id: newUser._id, role: newUser.role },
-            process.env.JWT_SECRET,
+            secretKey,
             { expiresIn: "30d" }
         );
 
@@ -48,6 +51,7 @@ export const signup = async (req, res) => {
                 name: newUser.name,
                 email: newUser.email,
                 role: newUser.role,
+                startDate: moment(newUser.startDate).format('YYYY-MM-DD'),
             },
         });
     } catch (error) {
@@ -55,7 +59,6 @@ export const signup = async (req, res) => {
         res.status(500).json({ message: "Internal server error", success: false });
     }
 };
-
 
 export const login = async (req, res) => {
     try {
