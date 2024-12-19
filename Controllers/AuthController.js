@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../Models/User.js';
 import moment from 'moment';
+import dotenv from "dotenv";
 
 const secretKey = process.env.JWT_SECRET;
 
