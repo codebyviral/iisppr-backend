@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const AttendanceSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Intern', 
+        ref: 'User', 
         required: true,
     },
     date: {
@@ -28,5 +28,5 @@ const AttendanceSchema = new mongoose.Schema({
 });
 
 // Ensure no duplicate attendance for the same intern on the same date
-AttendanceSchema.index({ internId: 1, date: 1 }, { unique: true });
+AttendanceSchema.index({ userId: 1, date: 1 }, { unique: true });
 export default  mongoose.model('Attendance', AttendanceSchema);
