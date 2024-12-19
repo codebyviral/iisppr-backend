@@ -9,7 +9,7 @@ export const signupValidation = (req, res, next) => {
         name: Joi.string().required().messages({
             'string.empty': 'Name is required',
         }),
-        mnumber: Joi.number().required().messages({
+        mnumber: Joi.number().min(10).required().messages({
             'number.base': 'Mobile number must be a valid number',
             'any.required': 'Mobile number is required',
         }),
@@ -44,7 +44,7 @@ export const signupValidation = (req, res, next) => {
             'date.base': 'Start date must be a valid date in YYYY-MM-DD or DD-MM-YYYY format',
         }),
     }).strict();
-    
+
     const { error } = schema.validate(req.body);
     if (error) {
         console.log(`Auth signup Validation Error: ${error}`)

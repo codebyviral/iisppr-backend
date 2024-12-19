@@ -54,6 +54,7 @@ export const signup = async (req, res) => {
                 startDate: moment(newUser.startDate).format('YYYY-MM-DD'),
             },
         });
+        console.log(`New Account Created: Welcome ${newUser.name} to IISPPR!`)
     } catch (error) {
         console.error("Error during user registration:", error);
         res.status(500).json({ message: "Internal server error", success: false });
@@ -82,7 +83,6 @@ export const login = async (req, res) => {
             process.env.JWT_SECRET,
             { expiresIn: "24h" }
         );
-
         res.status(200).json({
             message: "Login successful",
             success: true,
@@ -93,6 +93,7 @@ export const login = async (req, res) => {
                 email: user.email,
             },
         });
+        console.log(`${user.name} just logged in to IISPPR!`)
     } catch (error) {
         console.error("Error during login:", error);
         res.status(500).json({ message: "Internal server error", success: false });
