@@ -4,6 +4,7 @@ import connectDB from './src/db/index.js';
 import cors from 'cors';
 
 import router from "./Routes/AuthRouter.js";
+import updateUser from "./Routes/AdminRoutes.js";
 
 // Initialize environment variables
 dotenv.config();
@@ -17,6 +18,7 @@ app.use(cors());
 
 // Routes
 app.use('/auth', router);  // Authentication routes
+app.use('/user', updateUser);
 
 // Health check route
 app.get('/ping', (req, res) => {
