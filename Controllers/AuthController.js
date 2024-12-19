@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import User from '../Models/User.js';
 import moment from 'moment';
 import dotenv from "dotenv";
+dotenv.config();
 
 const secretKey = process.env.JWT_SECRET;
 
