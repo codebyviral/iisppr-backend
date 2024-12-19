@@ -17,8 +17,8 @@ app.use(express.json()); // Replaces bodyParser.json()
 app.use(cors());
 
 // Routes
-app.use('/auth', router);  // Authentication routes
 app.use('/user', updateUser);
+app.use('/api/auth', router);
 
 // Health check route
 app.get('/ping', (req, res) => {

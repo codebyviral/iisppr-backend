@@ -4,7 +4,8 @@ export const signupValidation = (req, res, next) => {
     // Trim the request body fields before validation
     req.body.name = req.body.name?.trim();
     req.body.email = req.body.email?.trim();
-
+    console.log(`Handling incoming Signup Request`);
+    
     const schema = Joi.object({
         name: Joi.string().required(),
         mnumber: Joi.number().required(),
@@ -18,6 +19,7 @@ export const signupValidation = (req, res, next) => {
 
     const { error } = schema.validate(req.body);
     if (error) {
+        console.log(`Auth Validation Error: ${error}`)
         return res.status(400)
             .json({ message: "Bad request", error: error.details });
     }
@@ -27,7 +29,7 @@ export const signupValidation = (req, res, next) => {
 export const loginValidation = (req, res, next) => {
     // Trim the request body fields before validation
     req.body.email = req.body.email?.trim();
-
+    console.log(`Handling incoming Login Request`);
     const schema = Joi.object({
         email: Joi.string().email().required(),
         password: Joi.string().min(6).required()
