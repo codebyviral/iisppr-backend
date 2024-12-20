@@ -5,6 +5,7 @@ import cors from 'cors';
 
 import router from "./Routes/AuthRouter.js";
 import updateUser from "./Routes/AdminRoutes.js";
+import userDetail from "./Routes/TaskAllocationRoutes.js"
 
 // Initialize environment variables
 dotenv.config();
@@ -19,6 +20,7 @@ app.use(cors());
 // Routes
 app.use('/user', updateUser);
 app.use('/api/auth', router);
+app.use('/api/getUsers', userDetail);
 
 // Health check route
 app.get('/ping', (req, res) => {
