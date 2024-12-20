@@ -6,6 +6,7 @@ import cors from 'cors';
 import router from "./Routes/AuthRouter.js";
 import updateUser from "./Routes/AdminRoutes.js";
 import attendanceRoutes from "./Routes/AttendanceRoutes.js"
+import userDetail from "./Routes/TaskAllocationRoutes.js";
 import { startCronJobs } from "./Controllers/AutoAccountDel.js";
 // Initialize environment variables
 dotenv.config();
@@ -21,6 +22,8 @@ app.use(cors());
 app.use('/user', updateUser);
 app.use('/api/auth', router);
 app.use('/', attendanceRoutes);
+app.use('/api/getUsers', userDetail);
+
 startCronJobs();
 // Health check route
 app.get('/ping', (req, res) => {
