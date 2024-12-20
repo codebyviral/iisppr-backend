@@ -10,22 +10,23 @@ const markAttendance = async (req, res) => {
             return res.status(400).json({ error: 'All fields are required.' });
         }
 
+        // Check if attendance is already marked for this user and date
+        const existingAttendance = await Attendance.findOne({ userId, date });
+        if (existingAttendance) {
+            return res.status(400).json({ error: 'Attendance already marked for this date.' });
+        }
+
+        // If no existing attendance, proceed to save
         const attendance = new Attendance({ userId, date, status });
         await attendance.save();
 
         res.status(201).json({ message: 'Attendance marked successfully.', attendance });
     } catch (error) {
-        if (error.code === 11000) {
-            // Duplicate key error: Attendance already exists for this intern and date
-            res.status(400).json({ error: 'Attendance already marked for this date.' });
-        } else {
-            // Generic server error
-            console.error('Error marking attendance:', error);
-            res.status(500).json({ error: 'An error occurred while marking attendance.' });
-        }
-    
+        console.error('Error marking attendance:', error);
+        res.status(500).json({ error: 'An error occurred while marking attendance.' });
     }
 };
+
 
 // GET /attendance - Retrieve attendance records
 const getAttedanceByid = async (req, res) => {
