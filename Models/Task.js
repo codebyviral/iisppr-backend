@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const TaskSchema = new mongoose.Schema({
     assignedTo: {
         type: String,
+        ref: "User",
         required: true
     },
     title: {
