@@ -11,7 +11,6 @@ import attendanceRoutes from "./Routes/AttendanceRoutes.js";  // Importing atten
 import { startCronJobs } from "./Controllers/AutoAccountDel.js";  // Importing function to start cron jobs for automatic account deletion
 import userDetail from "./Routes/TaskAllocationRoutes.js";
 import taskRouter from "./Routes/TaskRouter.js";
-import { startCronJobs } from "./Controllers/AutoAccountDel.js";
 
 // Loading environment variables from .env file
 dotenv.config();
