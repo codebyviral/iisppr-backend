@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const TaskSchema = new mongoose.Schema({
     assignedTo: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true
     },

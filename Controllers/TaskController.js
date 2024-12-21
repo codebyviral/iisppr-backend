@@ -15,7 +15,7 @@ export const addTask = async(req,res) => {
 
         const storeData = await addTask.save();
         console.log(storeData);
-        res.status(201).json({storeData});
+        res.status(200).json({storeData});
     } catch(error) {
         res.status(400).json(error);
     }
@@ -25,9 +25,10 @@ export const addTask = async(req,res) => {
 //getting all the tasks
 export const getTasks = async(req, res) => {  
     try {
-        const tasksData = await Task.find();
+        const { userId } = req.params;
+        const tasksData = await Task.find({assignedTo:userId});
         console.log(tasksData);
-        res.status(201).json({tasksData});
+        res.status(200).json({tasksData});
     } catch(error) {
         res.status(400).json(error);
     }
@@ -48,7 +49,7 @@ export const updateTask = async(req, res) => {
         } 
 
         console.log(updatedTask);
-        res.status(201).json({updatedTask});
+        res.status(200).json({updatedTask});
     } catch(error) {
         res.status(400).json(error);
     }
@@ -61,7 +62,7 @@ export const deleteTask = async(req, res) => {
         const { id } = req.params;
         const deletedTask = await Task.findByIdAndDelete({_id:id});
 
-        res.status(201).json(deletedTask);
+        res.status(200).json(deletedTask);
     } catch(error) {
         res.status(400).json(error);
     }
