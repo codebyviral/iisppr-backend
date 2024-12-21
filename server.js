@@ -1,3 +1,4 @@
+
 // Importing required dependencies
 import express from "express";  // Express framework for creating the server
 import dotenv from "dotenv";   // To load environment variables from a .env file
@@ -8,6 +9,9 @@ import router from "./Routes/AuthRouter.js";  // Importing authentication routes
 import updateUser from "./Routes/AdminRoutes.js";  // Importing admin-related routes for updating user information
 import attendanceRoutes from "./Routes/AttendanceRoutes.js";  // Importing attendance-related routes
 import { startCronJobs } from "./Controllers/AutoAccountDel.js";  // Importing function to start cron jobs for automatic account deletion
+import userDetail from "./Routes/TaskAllocationRoutes.js";
+import taskRouter from "./Routes/TaskRouter.js";
+import { startCronJobs } from "./Controllers/AutoAccountDel.js";
 
 // Loading environment variables from .env file
 dotenv.config();
@@ -21,17 +25,20 @@ app.use(express.json());
 // Enabling Cross-Origin Resource Sharing (CORS) for all routes
 app.use(cors());
 
+
+// Defining routes for various functionalities
+app.use('/user', updateUser);  // Route for user-related admin functionalities
+app.use('/api/auth', router);  // Route for authentication functionalities
+app.use('/', attendanceRoutes);  // Route for attendance-related functionalities
+app.use('/api/getUsers', userDetail);
+app.use('/task',taskRouter);
+
 // Predefined responses for chatbot functionality
 const responses = {
   hello: "Hi! How can I assist you?",  // Response for 'hello' message
   goodbye: "Goodbye! Have a nice day.",  // Response for 'goodbye' message
   default: "Sorry, I didn't understand that."  // Default response for unrecognized messages
 };
-
-// Defining routes for various functionalities
-app.use('/user', updateUser);  // Route for user-related admin functionalities
-app.use('/api/auth', router);  // Route for authentication functionalities
-app.use('/', attendanceRoutes);  // Route for attendance-related functionalities
 
 // Handling POST requests to '/chat' endpoint for chatbot interaction
 app.post('/chat', (req, res) => {
