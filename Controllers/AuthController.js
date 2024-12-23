@@ -71,12 +71,12 @@ export const signup = async (req, res) => {
             success: true,
             message: "User registered successfully",
             token,
-            isAdmin:newUser.isAdmin,
             user: {
                 id: newUser._id,
                 name: newUser.name,
                 email: newUser.email,
                 role: newUser.role,
+                isAdmin: newUser.isAdmin,
                 startDate: moment(newUser.startDate).format('YYYY-MM-DD'),
             },
         });
@@ -136,6 +136,7 @@ export const login = async (req, res) => {
                 id: user._id,
                 name: user.name,
                 email: user.email,
+                isAdmin: user.isAdmin,
             },
         });
         console.log(`${user.name} just logged in to IISPPR!`);
