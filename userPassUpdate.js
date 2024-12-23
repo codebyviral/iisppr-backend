@@ -34,3 +34,15 @@ const userPassUpdate = async (req, res) => {
 };
 
 module.exports = userPassUpdate;
+
+
+//Routes Ke liye hai (Path apne hisab se set karlena)
+const express = require('express');
+const userPassUpdate = require('../controllers/userPassUpdate');
+const router = express.Router();
+router.post('/update-password', userPassUpdate);
+module.exports = router;
+
+
+//server.js file daal dena ye wala bas
+app.use('/api/users', userRoutes);
