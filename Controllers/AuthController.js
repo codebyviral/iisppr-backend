@@ -71,6 +71,7 @@ export const signup = async (req, res) => {
             success: true,
             message: "User registered successfully",
             token,
+            isAdmin,
             user: {
                 id: newUser._id,
                 name: newUser.name,
