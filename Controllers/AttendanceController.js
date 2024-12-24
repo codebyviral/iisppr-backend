@@ -1,4 +1,6 @@
+
 import Attendance from '../Models/AttendanceModel.js';
+
 
 const markAttendance = async (req, res) => {
     try {
@@ -60,13 +62,9 @@ const getAttendance = async (req, res) => {
         const records = await Attendance.find({
             date: { $gte: startOfDay, $lte: endOfDay },
         }).sort({ date: -1 });
-        // Example UTC check-in time
-const checkInTime = new Date("2024-12-14T19:15:30.360Z");
+        
 
-// Convert UTC to IST (Indian Standard Time)
-const checkInTimeIST = checkInTime.toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
 
-console.log(checkInTimeIST); // It will display in IST
 
         res.status(200).json(records || []);
     } catch (error) {
@@ -83,3 +81,4 @@ export  {
     getAttendance,
     getAttedanceByid
 };
+
