@@ -22,7 +22,15 @@ const app = express();
 app.use(express.json());
 
 // Enabling Cross-Origin Resource Sharing (CORS) for all routes
-app.use(cors());
+
+const corsOptions = {
+	origin: ['https://iisppr-intern-management.vercel.app', 'http://localhost:5173'],
+	method: 'GET, POST, DELETE, PATCH, HEAD',
+	Credentials: true,
+	allowedHeaders: 'Content-Type, Authorization'
+}
+
+app.use(cors(corsOptions));
 
 // Defining routes for various functionalities
 app.use("/user", updateUser); // Route for user-related admin functionalities
