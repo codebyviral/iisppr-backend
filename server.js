@@ -5,10 +5,10 @@ import connectDB from "./src/db/index.js"; // Function to connect to the databas
 import cors from "cors"; // To enable Cross-Origin Resource Sharing (CORS)
 
 import router from "./Routes/AuthRouter.js"; // Importing authentication routes
-import updateUser from "./Routes/AdminRoutes.js"; // Importing admin-related routes for updating user information
 import attendanceRoutes from "./Routes/AttendanceRoutes.js"; // Importing attendance-related routes
 import { startCronJobs } from "./Controllers/AutoAccountDel.js"; // Importing function to start cron jobs for automatic account deletion
-import userDetail from "./Routes/TaskAllocationRoutes.js";
+import adminrouter from "./Routes/AdminRoutes.js";
+import passupdaterouter from "./Routes/Updatepassword.js";
 import taskRouter from "./Routes/TaskRouter.js";
 import reportRoutes from "./Routes/ReportRoutes.js"; //Importing report generation routes
 
@@ -33,11 +33,11 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Defining routes for various functionalities
-app.use("/user", updateUser); // Route for user-related admin functionalities
 app.use("/api/auth", router); // Route for authentication functionalities
+app.use("/user", passupdaterouter);   //passwor dupdate
 app.use("/", attendanceRoutes); // Route for attendance-related functionalities
-app.use("/api/getUsers", userDetail);
-app.use("/task", taskRouter);
+app.use("/task", taskRouter);      //for task cration
+app.use("/", adminrouter);      //for admin panal
 app.use("/reports", reportRoutes); //Route for report -> pdf/excel generation functionalities
 
 // Predefined responses for chatbot functionality

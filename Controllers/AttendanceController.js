@@ -1,6 +1,4 @@
-
 import Attendance from '../Models/AttendanceModel.js';
-
 
 const markAttendance = async (req, res) => {
     try {
