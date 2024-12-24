@@ -1,54 +1,93 @@
-import express from "express";
-import dotenv from "dotenv";
-import connectDB from './src/db/index.js';
-import cors from 'cors';
+// Importing required dependencies
+import express from "express"; // Express framework for creating the server
+import dotenv from "dotenv"; // To load environment variables from a .env file
+import connectDB from "./src/db/index.js"; // Function to connect to the database
+import cors from "cors"; // To enable Cross-Origin Resource Sharing (CORS)
 
-import router from "./Routes/AuthRouter.js";
-import updateUser from "./Routes/AdminRoutes.js";
-import attendanceRoutes from "./Routes/AttendanceRoutes.js"
-import { startCronJobs } from "./Controllers/AutoAccountDel.js";
-// Initialize environment variables
+import router from "./Routes/AuthRouter.js"; // Importing authentication routes
+import attendanceRoutes from "./Routes/AttendanceRoutes.js"; // Importing attendance-related routes
+import { startCronJobs } from "./Controllers/AutoAccountDel.js"; // Importing function to start cron jobs for automatic account deletion
+import adminrouter from "./Routes/AdminRoutes.js";
+import passupdaterouter from "./Routes/Updatepassword.js";
+import taskRouter from "./Routes/TaskRouter.js";
+import reportRoutes from "./Routes/ReportRoutes.js"; //Importing report generation routes
+
+// Loading environment variables from .env file
 dotenv.config();
 
-// Create express app
+// Creating an instance of express server
 const app = express();
 
-// Middleware
-app.use(express.json()); // Replaces bodyParser.json()
-app.use(cors());
+// Middleware to parse incoming JSON requests
+app.use(express.json());
 
-// Routes
-app.use('/user', updateUser);
-app.use('/api/auth', router);
-app.use('/', attendanceRoutes);
+// Enabling Cross-Origin Resource Sharing (CORS) for all routes
+
+const corsOptions = {
+	origin: ['https://iisppr-intern-management.vercel.app', 'http://localhost:5173'],
+	method: 'GET, POST, DELETE, PATCH, HEAD',
+	Credentials: true,
+	allowedHeaders: 'Content-Type, Authorization'
+}
+
+app.use(cors(corsOptions));
+
+// Defining routes for various functionalities
+app.use("/api/auth", router); // Route for authentication functionalities
+app.use("/user", passupdaterouter);   //passwor dupdate
+app.use("/", attendanceRoutes); // Route for attendance-related functionalities
+app.use("/task", taskRouter);      //for task cration
+app.use("/api/get", adminrouter);      //for admin panal
+app.use("/reports", reportRoutes); //Route for report -> pdf/excel generation functionalities
+
+// Predefined responses for chatbot functionality
+const responses = {
+	hello: "Hi! How can I assist you?", // Response for 'hello' message
+	goodbye: "Goodbye! Have a nice day.", // Response for 'goodbye' message
+	default: "Sorry, I didn't understand that.", // Default response for unrecognized messages
+};
+
+// Handling POST requests to '/chat' endpoint for chatbot interaction
+app.post("/chat", (req, res) => {
+	const userMessage = req.body.message ? req.body.message.toLowerCase() : ""; // Extracting and normalizing user message
+	let botResponse = responses[userMessage] || responses.default; // Selecting appropriate bot response
+	res.json({ message: botResponse }); // Responding with the selected message
+});
+
+// Starting cron jobs for automatic account deletion (or other tasks)
 startCronJobs();
-// Health check route
-app.get('/ping', (req, res) => {
-    res.send('PONG');
+
+// A simple health check route to test server status
+app.get("/ping", (req, res) => {
+	res.send("PONG"); // Responds with 'PONG' when pinged
 });
 
-// Default route for the server status
+// Default route to confirm server is up and running
 app.get("/", (req, res) => {
-    res.send("IISPPR Server is up and running!");
+	res.send("IISPPR Server is up and running!"); // Custom message indicating the server is active
 });
 
-// Get port from environment variables or default to 4000
+// Setting the port to listen for incoming requests (either from environment or default to 4000)
 const PORT = process.env.PORT || 4000;
 
-// Start the server only after successful DB connection
-connectDB()
-    .then(() => {
-        app.listen(PORT, () => {
-            console.log(`Server is running on port: ${PORT}`);
-        });
+// Connecting to the database and starting the server
+connectDB() // Connect to the database
+	.then(() => {
+		// Start the server if the database connection is successful
+		app.listen(PORT, () => {
+			console.log(`Server is running on port: ${PORT}`);
+		});
 
-        app.on("error", (error) => {
-            console.error(`Error: ${error}`);
-            throw error;
-        });
-    })
-    .catch((err) => {
-        console.error(`MongoDB connection failed: ${err}`);
-    });
+		// Handle errors related to server operations
+		app.on("error", (error) => {
+			console.error(`Error: ${error}`);
+			throw error;
+		});
+	})
+	.catch((err) => {
+		// If database connection fails, log the error
+		console.error(`MongoDB connection failed: ${err}`);
+	});
 
+// Export the app for testing or further use
 export default app;

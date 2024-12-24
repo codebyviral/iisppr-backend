@@ -30,8 +30,12 @@ const UserSchema = new Schema({
     enum: ["admin", "manager", "intern"],
     default: "intern",
   },
-  startDate: { 
-    type: Date, 
+  isAdmin: {
+    type: Boolean,
+    default: false
+  },
+  startDate: {
+    type: Date,
     default: Date.now,
     set: (value) => moment(value).format('YYYY-MM-DD'), // Only date, no time
 
