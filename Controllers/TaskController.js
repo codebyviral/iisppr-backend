@@ -1,4 +1,5 @@
 import Task from '../Models/Task.js';
+import User from "../Models/User.js";  
 
 // adding new task
 export const addTask = async(req,res) => {
@@ -23,16 +24,34 @@ export const addTask = async(req,res) => {
   
   
 //getting all the tasks
-export const getTasks = async(req, res) => {  
+
+export const getTasks = async (req, res) => {  
     try {
         const { userId } = req.params;
-        const tasksData = await Task.find({assignedTo:userId});
-        console.log(tasksData);
-        res.status(200).json({tasksData});
-    } catch(error) {
-        res.status(400).json(error);
+        
+        // Retrieve the user to check their role or admin status
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        let tasksData;
+
+        // Check if the user is an admin
+        if (user.isAdmin || user.role === 'admin') {
+            // Admin can see all tasks
+            tasksData = await Task.find();
+        } else {
+            // Regular users can see only their own tasks
+            tasksData = await Task.find({ assignedTo: userId });
+        }
+
+        res.status(200).json({ tasksData });
+    } catch (error) {
+        res.status(400).json({ message: "Error fetching tasks", error });
     }
 };
+
   
   
 //updating task 
