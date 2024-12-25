@@ -11,7 +11,7 @@ export const startCronJobs = () => {
         
         // Calculate the date 100 days ago
         const bufferDate = new Date();
-        bufferDate.setDate(today.getDate() - 100);
+        bufferDate.setDate(today.getDate() - 70);
         
         // Delete interns whose accounts started more than 100 days ago
         const result = await User.deleteMany({
