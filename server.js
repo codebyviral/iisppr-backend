@@ -39,7 +39,7 @@ app.use("/api/auth", router); // Route for authentication functionalities
 app.use("/user", passupdaterouter);   //passwor dupdate
 app.use("/", attendanceRoutes); // Route for attendance-related functionalities
 app.use("/task", taskRouter);      //for task cration
-app.use("/api/get", adminrouter);      //for admin panal
+app.use("/", adminrouter);      //for admin panal
 app.use("/reports", reportRoutes); //Route for report -> pdf/excel generation functionalities
 app.use("/project", projectRoutes)
 app.use("/weeklystatus", submitreportroutes);
