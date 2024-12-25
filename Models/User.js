@@ -34,6 +34,14 @@ const UserSchema = new Schema({
     type: Boolean,
     default: false
   },
+  githubURL: {
+    type: String,
+    default: ''
+  },
+  linkedInURL: {
+    type: String,
+    default: ''
+  },
   startDate: {
     type: Date,
     default: Date.now,
