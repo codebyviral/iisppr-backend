@@ -5,6 +5,6 @@ import { ensureAuthenticated } from '../Middlewares/Auth.js';
 const router = express.Router();
 
 router.post('/submitTask', ensureAuthenticated, upload.fields([{ name: 'file' }, { name: 'image' }]), submitTaskCompletion);
-router.get('/getsubmitedtasks', ensureAuthenticated, getTasksreports);
+router.get('/getsubmitedtasks', getTasksreports);
 
 export default router;

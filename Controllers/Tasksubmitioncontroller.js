@@ -3,6 +3,7 @@ import { CloudinaryStorage } from "multer-storage-cloudinary";
 import cloudinary from "../config/cloudinaryConfig.js";
 import TaskCompletion from "../Models/Tasksubmition.js";
 import { ensureAuthenticated } from "../Middlewares/Auth.js";
+import User from "../Models/User.js"; 
 
 // Configure Multer for Cloudinary storage
 const storage = new CloudinaryStorage({
@@ -68,7 +69,9 @@ export const submitTaskCompletion = async (req, res) => {
 
 export const getTasksreports = async (req, res) => {
   try {
-    const tasks = await TaskCompletion.find().sort({ createdAt: -1 }); // Fetch tasks sorted by creation date (latest first)
+    const tasks = await TaskCompletion.find()
+      .sort({ createdAt: -1 }) 
+      .populate("user", "name") 
     res.status(200).json(tasks);
   } catch (error) {
     console.error("Error fetching tasks:", error);
