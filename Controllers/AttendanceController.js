@@ -29,13 +29,19 @@ const markAttendance = async (req, res) => {
 
 
 // GET /attendance - Retrieve attendance records
+// In your route file (e.g., routes.js)
+
+// In your controller
 const getAttedanceByid = async (req, res) => {
     try {
-        const { userId } = req.query;
+        const { userId } = req.params;  
+        
+        if (!userId) {
+            return res.status(400).json({ error: "userId is required" });
+        }
 
-        const query = userId ? { userId } : {};
-        const records = await Attendance.find(query).sort({ date: -1 });
-
+        const records = await Attendance.find({ userId: userId }).sort({ date: -1 });
+        
         res.status(200).json(records);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -43,10 +49,8 @@ const getAttedanceByid = async (req, res) => {
 };
 
 
-
 const getAttendance = async (req, res) => {
     try {
-        // Get current date in the local time zone (India Standard Time)
         const today = new Date();
         
         // Set the start of the day (00:00:00) in local time
@@ -81,4 +85,3 @@ export  {
     getAttendance,
     getAttedanceByid
 };
-
