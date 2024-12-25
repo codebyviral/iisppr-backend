@@ -60,6 +60,11 @@ async function generateExcelReport(res, internsData) {
 			performance: `${intern.performance}%`,
 		});
 		row.alignment = { vertical: "middle", horizontal: "center" };
+		row.getCell("taskUpdate").alignment = {
+			wrapText: true,
+			vertical: "middle",
+			horizontal: "left",
+		};
 	});
 
 	// response header type to receive the data in xlsx format
@@ -135,12 +140,23 @@ async function generatePdfReport(res, internsData) {
 		// add table rows from internsData[]
 		y += 25;
 		internsData.forEach((intern, index) => {
+			let rowHeight = 20;
 			x = 20;
 			intern.id = index + 1;
+			const taskUpdateHeight = doc.heightOfString(
+				intern.taskUpdate?.toString() || "",
+				{
+					width: 200,
+					fontSize: 9,
+				}
+			);
+			rowHeight = Math.max(rowHeight, taskUpdateHeight + 10);
+
+			const verticalHeight = y + (rowHeight - 10) / 2;
 			// Add subtle row background for even rows
 			if (index % 2 === 0) {
-				doc.fillColor("#fafafa")
-					.rect(x, y - 5, doc.page.width - 100, 20)
+				doc.fillColor("#ececec")
+					.rect(x, y, doc.page.width - 40, rowHeight)
 					.fill();
 			}
 
@@ -153,13 +169,27 @@ async function generatePdfReport(res, internsData) {
 					value = `${value}%`;
 				}
 
-				doc.font("Helvetica").fontSize(9).text(value.toString(), x, y, {
-					width: column.width,
-					align: "left",
-				});
+				if (column.id === "taskUpdate") {
+					doc.font("Helvetica")
+						.fontSize(9)
+						.text(value?.toString(), x, y, {
+							width: column.width,
+							align: "left",
+							lineGap: 2,
+						});
+				} else {
+					doc.font("Helvetica")
+						.fontSize(9)
+						.text(value?.toString(), x, verticalHeight, {
+							width: column.width,
+							align: "left",
+							lineGap: 2,
+						});
+				}
+
 				x += column.width + 10;
 			});
-			y += 20;
+			y += rowHeight;
 
 			// Add new page if content exceeds page height and with a margin-y 50
 			if (y > doc.page.height - 50) {
@@ -268,7 +298,7 @@ async function getInternsData() {
 						in: {
 							$concat: [
 								"$$value",
-								{ $cond: [{ $eq: ["$$value", ""] }, "", "; "] }, //if string is "" add "" else add ";"
+								{ $cond: [{ $eq: ["$$value", ""] }, "", "\n"] }, //if string is "" add "" else add ";"
 								"$$this.title",
 								" (",
 								"$$this.status",
@@ -287,7 +317,7 @@ async function getInternsData() {
 				name: 1,
 				attendance: { $round: ["$attendancePercentage", 0] }, //round to 0 decimal places
 				taskUpdate: "$taskUpdates",
-				department: "$role",
+				department: "$department",
 				taskStatus: {
 					$cond: [
 						{ $gt: ["$completedTasks", 0] },
