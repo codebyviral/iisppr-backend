@@ -61,5 +61,62 @@ export const getAllProjects = async (req, res) => {
     }
   };
   
+// DELETE: Delete a project by ID
+export const deleteProject = async (req, res) => {
+  try {
+      const { id } = req.params;
+
+      if (!id) {
+          return res.status(400).json({ error: "Project ID is required." });
+      }
+
+      const project = await Project.findByIdAndDelete(id);
+
+      if (!project) {
+          return res.status(404).json({ error: "Project not found." });
+      }
+
+      res.status(200).json({ message: "Project deleted successfully." });
+  } catch (error) {
+      console.error("Error deleting project:", error);
+      res.status(500).json({ error: "An error occurred while deleting the project." });
+  }
+};
+
+// PUT: Update a project by ID
+export const updateProject = async (req, res) => {
+  try {
+      const { id } = req.params;
+      const { title, subTitle, description, createdBy } = req.body;
+
+      if (!id) {
+          return res.status(400).json({ error: "Project ID is required." });
+      }
+
+      // Build the update object dynamically
+      const updateData = {};
+      if (title) updateData.title = title;
+      if (subTitle) updateData.subTitle = subTitle;
+      if (description) updateData.description = description;
+      if (createdBy) updateData.createdBy = createdBy;
+
+      // If a new image is provided
+      if (req.file) {
+          updateData.image = `/uploads/${req.file.filename}`;
+      }
+
+      const updatedProject = await Project.findByIdAndUpdate(id, updateData, { new: true });
+
+      if (!updatedProject) {
+          return res.status(404).json({ error: "Project not found." });
+      }
+
+      res.status(200).json({ message: "Project updated successfully.", project: updatedProject });
+  } catch (error) {
+      console.error("Error updating project:", error);
+      res.status(500).json({ error: "An error occurred while updating the project." });
+  }
+};
+
 
 export { upload };
