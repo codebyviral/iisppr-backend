@@ -5,6 +5,6 @@ const router = express.Router();
 
 router.post('/attendance', markAttendance);
 router.get('/attendance', getAttendance);
-router.get('/attendance/:userid', getAttedanceByid);
+router.get('/attendance/:userId', getAttedanceByid);
 
 export default router;
