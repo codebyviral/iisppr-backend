@@ -4,7 +4,6 @@ import User from '../Models/User.js';
 import moment from 'moment';
 import dotenv from "dotenv";
 import mongoose from 'mongoose';
-
 dotenv.config();
 
 const secretKey = process.env.JWT_SECRET;
@@ -13,31 +12,25 @@ export const signup = async (req, res) => {
     try {
         const { name, email, password, rpassword, mnumber, role, startDate } = req.body;
 
+        // Validate fields
+        if (!name || !email || !password || !mnumber || !startDate) {
+            return res.status(400).json({ message: "All fields are required.", success: false });
+        }
+
         // Check if passwords match
         if (password !== rpassword) {
-            return res.status(400).json({ message: "Passwords do not match", success: false });
+            return res.status(400).json({ message: "Passwords do not match.", success: false });
         }
 
         // Check if user already exists
-        try {
-            const userExists = await User.findOne({ email });
-            if (userExists) {
-                return res.status(400).json({ message: "User already exists", success: false });
-            }
-        } catch (error) {
-            console.error("Error checking user existence:", error);
-            return res.status(500).json({ message: "Internal server error", success: false });
+        const userExists = await User.findOne({ email });
+        if (userExists) {
+            return res.status(400).json({ message: "User already exists.", success: false });
         }
 
         // Encrypt password
-        let hashedPassword;
-        try {
-            const salt = await bcrypt.genSalt(10);
-            hashedPassword = await bcrypt.hash(password, salt);
-        } catch (error) {
-            console.error("Error hashing password:", error);
-            return res.status(500).json({ message: "Internal server error", success: false });
-        }
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
         // Create new user
         const newUser = new User({
@@ -46,48 +39,17 @@ export const signup = async (req, res) => {
             password: hashedPassword,
             mnumber,
             role,
-            startDate: moment(startDate).startOf('day').toDate(), // Format date
+            startDate,
         });
 
-        try {
-            await newUser.save();
-        } catch (error) {
-            console.error("Error saving new user:", error);
-            return res.status(500).json({ message: "Internal server error", success: false });
-        }
+        await newUser.save();
 
-        // Generate token
-        let token;
-        try {
-            token = jwt.sign(
-                { id: newUser._id, role: newUser.role },
-                secretKey,
-                { expiresIn: "30d" }
-            );
-        } catch (error) {
-            console.error("Error generating token:", error);
-            return res.status(500).json({ message: "Internal server error", success: false });
-        }
-
-        res.status(201).json({
-            success: true,
-            message: "User registered successfully",
-            token,
-            user: {
-                id: newUser._id,
-                name: newUser.name,
-                email: newUser.email,
-                role: newUser.role,
-                isAdmin: newUser.isAdmin,
-                startDate: moment(newUser.startDate).format('YYYY-MM-DD'),
-            },
-        });
-        console.log(`New Account Created: Welcome ${newUser.name} to IISPPR!`);
+        return res.status(201).json({ message: "User registered successfully.", success: true });
     } catch (error) {
-        console.error("Unexpected error during signup:", error);
-        res.status(500).json({ message: "Internal server error", success: false });
+        return res.status(500).json({ message: "Server error.", success: false });
     }
 };
+
 
 export const login = async (req, res) => {
     try {
