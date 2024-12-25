@@ -12,20 +12,22 @@ const storage = multer.diskStorage({
     },
   });
   
-
-const upload = multer({
+  const upload = multer({
     storage,
     limits: { fileSize: 5 * 1024 * 1024 }, // Limit file size to 5MB
     fileFilter: (req, file, cb) => {
-      const allowedTypes = /jpeg|jpg|png|gif/;
-      const mimeType = allowedTypes.test(file.mimetype);
-      const extName = allowedTypes.test(file.originalname.split('.').pop().toLowerCase());
-      if (mimeType && extName) {
-        return cb(null, true);
-      }
-      cb(new Error("Only image files are allowed (jpeg, jpg, png, gif)."));
+        // Allow jpeg, jpg, png, gif, and webp
+        const allowedTypes = /jpeg|jpg|png|gif|webp/;
+        const mimeType = allowedTypes.test(file.mimetype);
+        const extName = allowedTypes.test(file.originalname.split('.').pop().toLowerCase());
+
+        if (mimeType && extName) {
+            return cb(null, true); // Accept the file
+        }
+        cb(new Error("Only image files are allowed (jpeg, jpg, png, gif, webp)."));
     },
-  });
+});
+
   
 // POST: Create a new project
 export const createProject = async (req, res) => {
