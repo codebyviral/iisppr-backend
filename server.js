@@ -13,6 +13,7 @@ import taskRouter from "./Routes/TaskRouter.js";
 import reportRoutes from "./Routes/ReportRoutes.js"; //Importing report generation routes
 import submitreportroutes from "./Routes/SubmitreportRoutes.js";
 import projectRoutes from "./Routes/ProjectRoutes.js";
+import tasksubmitroutes from "./Routes/Tasksubmitionroutes.js";
 // Loading environment variables from .env file
 dotenv.config();
 
@@ -42,6 +43,8 @@ app.use("/", adminrouter);      //for admin panal
 app.use("/reports", reportRoutes); //Route for report -> pdf/excel generation functionalities
 app.use("/project", projectRoutes)
 app.use("/weeklystatus", submitreportroutes);
+app.use("/", tasksubmitroutes);
+
 
 // Predefined responses for chatbot functionality
 const responses = {
