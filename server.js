@@ -24,13 +24,12 @@ app.use(express.json());
 app.use("/uploads", express.static("projectimageuploads"));
 
 // Enabling Cross-Origin Resource Sharing (CORS) for all routes
-
 const corsOptions = {
 	origin: ['https://iisppr-intern-management.vercel.app', 'http://localhost:5173'],
-	method: 'GET, POST, DELETE, PATCH, HEAD',
-	Credentials: true,
-	allowedHeaders: 'Content-Type, Authorization'
-}
+	methods: ['GET', 'POST', 'DELETE', 'PATCH', 'HEAD'], // Changed 'method' to 'methods' and fixed format
+	credentials: true,  // Changed 'Credentials' to lowercase
+	allowedHeaders: ['Content-Type', 'Authorization'] // Changed to array format
+};
 
 app.use(cors(corsOptions));
 
