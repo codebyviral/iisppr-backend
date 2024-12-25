@@ -20,10 +20,9 @@ const upload = multer({
 
 // Controller for submitting task completion data
 export const submitTaskCompletion = async (req, res) => {
-  console.log('Authenticated User:', req.user);  // Check if user information is present
   try {
-    const userId = req.user?._id || req.user?.id;  // Check for both possible user ID fields
-    console.log('User ID:', userId);  // Log the user ID for debugging
+    const userId = req.user?._id || req.user?.id;  
+    console.log('User ID:', userId);  
 
     if (!userId) {
       return res.status(403).json({ message: "Unauthorized. User information is missing." });
