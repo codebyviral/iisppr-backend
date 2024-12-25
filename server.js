@@ -11,7 +11,8 @@ import adminrouter from "./Routes/AdminRoutes.js";
 import passupdaterouter from "./Routes/Updatepassword.js";
 import taskRouter from "./Routes/TaskRouter.js";
 import reportRoutes from "./Routes/ReportRoutes.js"; //Importing report generation routes
-
+import submitreportroutes from "./Routes/SubmitreportRoutes.js";
+import projectRoutes from "./Routes/ProjectRoutes.js";
 // Loading environment variables from .env file
 dotenv.config();
 
@@ -20,6 +21,7 @@ const app = express();
 
 // Middleware to parse incoming JSON requests
 app.use(express.json());
+app.use("/uploads", express.static("projectimageuploads"));
 
 // Enabling Cross-Origin Resource Sharing (CORS) for all routes
 
@@ -39,6 +41,8 @@ app.use("/", attendanceRoutes); // Route for attendance-related functionalities
 app.use("/task", taskRouter);      //for task cration
 app.use("/api/get", adminrouter);      //for admin panal
 app.use("/reports", reportRoutes); //Route for report -> pdf/excel generation functionalities
+app.use("/project", projectRoutes)
+app.use("/weeklystatus", submitreportroutes);
 
 // Predefined responses for chatbot functionality
 const responses = {
