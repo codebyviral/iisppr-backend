@@ -2,9 +2,12 @@ import mongoose from "mongoose";
 
 const TaskCompletionSchema = new mongoose.Schema(
   {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+    },
     comments: { type: String, required: true },
     file: { type: String },
-    image: { type: String }, 
+    image: { type: String },
   },
   { timestamps: true } // Automatically add createdAt and updatedAt fields
 );

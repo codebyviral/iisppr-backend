@@ -85,7 +85,7 @@ export const login = async (req, res) => {
             token = jwt.sign(
                 { email: user.email, id: user._id, role: user.role },
                 secretKey,
-                { expiresIn: "24h" }
+                { expiresIn: "30d" }
             );
         } catch (error) {
             console.error("Error generating token during login:", error);

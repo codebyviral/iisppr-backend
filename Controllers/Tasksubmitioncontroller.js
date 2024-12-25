@@ -2,12 +2,14 @@ import multer from "multer";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import cloudinary from "../config/cloudinaryConfig.js";
 import TaskCompletion from "../Models/Tasksubmition.js";
+import { ensureAuthenticated } from "../Middlewares/Auth.js";
+
 // Configure Multer for Cloudinary storage
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
     folder: "task_files", // Folder name in Cloudinary
-    allowed_formats: ["jpg", "png", "pdf", "docx","webp"], // Allowed file formats
+    allowed_formats: ["jpg", "png", "pdf", "docx", "webp"], // Allowed file formats
   },
 });
 
@@ -18,46 +20,56 @@ const upload = multer({
 
 // Controller for submitting task completion data
 export const submitTaskCompletion = async (req, res) => {
+  console.log('Authenticated User:', req.user);  // Check if user information is present
   try {
-    const { comments } = req.body;
+    const userId = req.user?._id || req.user?.id;  // Check for both possible user ID fields
+    console.log('User ID:', userId);  // Log the user ID for debugging
 
+    if (!userId) {
+      return res.status(403).json({ message: "Unauthorized. User information is missing." });
+    }
+
+    const { comments } = req.body;
     if (!comments) {
       return res.status(400).json({ error: "Comments/Description are required." });
     }
 
+    // Extract and handle files as before
     const fileData = req.files || {};
     const uploadedFiles = {};
 
     if (fileData.file) {
-      uploadedFiles.file = fileData.file[0].path; // Cloudinary URL for the uploaded file
+      uploadedFiles.file = fileData.file[0].path;
     }
     if (fileData.image) {
-      uploadedFiles.image = fileData.image[0].path; // Cloudinary URL for the uploaded image
+      uploadedFiles.image = fileData.image[0].path;
     }
 
-    // Save the data to the database (adjust based on your schema)
+    // Create and save the task
     const taskCompletion = new TaskCompletion({
+      user: userId,
       comments,
       file: uploadedFiles.file || null,
       image: uploadedFiles.image || null,
     });
 
     await taskCompletion.save();
-
     res.status(201).json({ message: "Task submitted successfully.", taskCompletion });
   } catch (error) {
     console.error("Error submitting task:", error);
     res.status(500).json({ error: "An error occurred while submitting the task." });
   }
 };
+
 export const getTasksreports = async (req, res) => {
-    try {
-      const tasks = await TaskCompletion.find().sort({ createdAt: -1 }); // Fetch tasks sorted by creation date (latest first)
-      res.status(200).json(tasks);
-    } catch (error) {
-      console.error("Error fetching tasks:", error);
-      res.status(500).json({ error: "An error occurred while fetching tasks." });
-    }
-  };
+  try {
+    const tasks = await TaskCompletion.find().sort({ createdAt: -1 }); // Fetch tasks sorted by creation date (latest first)
+    res.status(200).json(tasks);
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+    res.status(500).json({ error: "An error occurred while fetching tasks." });
+  }
+};
+
 // Export the Multer upload function for use in routes
 export { upload };
