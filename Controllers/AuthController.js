@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import User from '../Models/User.js';
 import moment from 'moment';
 import dotenv from "dotenv";
+import mongoose from 'mongoose';
 dotenv.config();
 
 const secretKey = process.env.JWT_SECRET;
@@ -108,3 +109,36 @@ export const login = async (req, res) => {
         res.status(500).json({ message: "Internal server error", success: false });
     }
 };
+
+export const getUserById = async (req, res) => {
+    try {
+      const { id } = req.params;
+  
+      // Check if the ID is a valid MongoDB ObjectId
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ message: "Invalid user ID" });
+      }
+  
+      // Query the database for the user by ID
+      const user = await User.findById(id);
+  
+      // If user is not found
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      // Return the user details excluding the password
+      res.status(200).json({
+        name: user.name,
+        mnumber: user.mnumber,
+        email: user.email,
+        role: user.role,
+        startDate: user.startDate,
+        isAdmin: user.isAdmin,
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Server error" });
+    }
+  };
+  
