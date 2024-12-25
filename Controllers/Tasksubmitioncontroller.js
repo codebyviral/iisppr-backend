@@ -22,7 +22,6 @@ const upload = multer({
 export const submitTaskCompletion = async (req, res) => {
   try {
     const userId = req.user?._id || req.user?.id;  
-    console.log('User ID:', userId);  
 
     if (!userId) {
       return res.status(403).json({ message: "Unauthorized. User information is missing." });
