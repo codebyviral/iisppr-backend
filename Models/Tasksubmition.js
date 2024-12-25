@@ -4,6 +4,7 @@ const TaskCompletionSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
+      ref:"User",
     },
     task:{
       type: mongoose.Schema.Types.ObjectId,
