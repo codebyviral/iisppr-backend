@@ -27,7 +27,12 @@ export const submitTaskCompletion = async (req, res) => {
       return res.status(403).json({ message: "Unauthorized. User information is missing." });
     }
 
-    const { comments } = req.body;
+    const { taskId, comments } = req.body;  // Extract taskId from the request body
+
+    if (!taskId) {
+      return res.status(400).json({ error: "Task ID is required." });  // Ensure taskId is provided
+    }
+
     if (!comments) {
       return res.status(400).json({ error: "Comments/Description are required." });
     }
@@ -43,9 +48,10 @@ export const submitTaskCompletion = async (req, res) => {
       uploadedFiles.image = fileData.image[0].path;
     }
 
-    // Create and save the task
+    // Create and save the task completion
     const taskCompletion = new TaskCompletion({
       user: userId,
+      task: taskId,  // Pass the taskId as a reference (ObjectId) here
       comments,
       file: uploadedFiles.file || null,
       image: uploadedFiles.image || null,
@@ -58,6 +64,7 @@ export const submitTaskCompletion = async (req, res) => {
     res.status(500).json({ error: "An error occurred while submitting the task." });
   }
 };
+
 
 export const getTasksreports = async (req, res) => {
   try {
