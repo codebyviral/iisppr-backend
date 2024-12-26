@@ -46,6 +46,10 @@ const UserSchema = new Schema({
 		type: String,
 		default: "Not Assigned",
 	},
+	notifications: {
+		type: [{ type: Schema.Types.ObjectId, ref: "Notification" }],
+		default: [],
+	},
 	startDate: {
 		type: Date,
 		default: Date.now,

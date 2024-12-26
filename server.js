@@ -14,6 +14,7 @@ import reportRoutes from "./Routes/ReportRoutes.js"; //Importing report generati
 import submitreportroutes from "./Routes/SubmitreportRoutes.js";
 import projectRoutes from "./Routes/ProjectRoutes.js";
 import tasksubmitroutes from "./Routes/Tasksubmitionroutes.js";
+import notificationRouter from "./Routes/NotificationRouter.js";
 // Loading environment variables from .env file
 dotenv.config();
 
@@ -27,9 +28,9 @@ app.use("/uploads", express.static("projectimageuploads"));
 
 const corsOptions = {
 	origin: ['https://iisppr-intern-management.vercel.app', 'http://localhost:5173'],
-	methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH', 'HEAD'], 
-	credentials: true, 
-	allowedHeaders: ['Content-Type', 'Authorization'] 
+	methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH', 'HEAD'],
+	credentials: true,
+	allowedHeaders: ['Content-Type', 'Authorization']
 };
 
 app.use(cors(corsOptions));
@@ -44,6 +45,7 @@ app.use("/reports", reportRoutes); //Route for report -> pdf/excel generation fu
 app.use("/project", projectRoutes)
 app.use("/weeklystatus", submitreportroutes);
 app.use("/", tasksubmitroutes);
+app.use("/send", notificationRouter)
 
 
 // Predefined responses for chatbot functionality
