@@ -4,20 +4,28 @@ import Task from "../Models/Task.js";
 
 // Function to send a notification
 const sendNotification = async (req, res) => {
-    const { userId } = req.body;
-    const { taskId } = req.body;
-    const { status } = req.body;
-    const { message } = req.body;
+    const { userId, status, message, taskId } = req.body;
+
     try {
-        const notification = new Notification({
+        // Create notification object with required fields
+        const notificationData = {
             userId,
             message,
-            task: taskId,
-            type: status,
-        });
+            type: status
+        };
+
+        // Only add task field if taskId is provided
+        if (taskId) {
+            notificationData.task = taskId;
+        }
+
+        const notification = new Notification(notificationData);
 
         await notification.save();
-        await User.findByIdAndUpdate(userId, { $push: { notifications: notification._id } })
+        await User.findByIdAndUpdate(userId, {
+            $push: { notifications: notification._id }
+        });
+
         res.status(200).json({ message: "Notification sent successfully!" });
         console.log("Notification sent successfully!");
     } catch (error) {
