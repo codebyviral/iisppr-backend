@@ -1,4 +1,5 @@
 import Notification from "../Models/Notification.js";
+import User from "../Models/User.js";
 
 // Function to send a notification
 const sendNotification = async (req, res) => {
@@ -11,10 +12,11 @@ const sendNotification = async (req, res) => {
             userId,
             message,
             task: taskId,
-            type: status, 
+            type: status,
         });
 
         await notification.save();
+        await User.findByIdAndUpdate(userId, { $push: { notifications: notification._id } })
         res.status(200).json({ message: "Notification sent successfully!" });
         console.log("Notification sent successfully!");
     } catch (error) {
@@ -23,4 +25,15 @@ const sendNotification = async (req, res) => {
     }
 };
 
-export { sendNotification }
+const getNotifcation = async (req, res) => {
+    const { userId } = req.body;
+    try {
+        const notifications = await User.findById(userId).populate("notifications")
+        res.status(200).json({ notifications });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to get notifications!" });
+        console.error("Error getting notifications:", error)
+    }
+}
+
+export { sendNotification, getNotifcation }
