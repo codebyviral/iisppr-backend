@@ -48,7 +48,7 @@ app.use("/project", projectRoutes)
 app.use("/weeklystatus", submitreportroutes);
 app.use("/", tasksubmitroutes);
 app.use("/send", notificationRouter)
-app.use("/",LeaveRoutes)
+app.use("/", LeaveRoutes)
 
 // Predefined responses for chatbot functionality
 const responses = {
