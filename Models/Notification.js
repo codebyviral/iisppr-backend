@@ -21,7 +21,6 @@ const notificationSchema = new mongoose.Schema(
         },
         type: {
             type: String,
-            enum: ["approved", "rejected", "reminder"],
             required: true,
         },
         isRead: {
