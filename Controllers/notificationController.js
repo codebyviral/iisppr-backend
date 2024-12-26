@@ -28,12 +28,12 @@ const sendNotification = async (req, res) => {
 
 const getNotifcation = async (req, res) => {
     // Get userId from query parameters
-    const { userId, taskId } = req.query;
+    const { userId } = req.query;
 
     try {
         // Fetch notifications for the given userId
         const notifications = await User.findById(userId).populate("notifications");
-        res.status(200).json({ notifications, taskDetails });
+        res.status(200).json({ notifications });
     } catch (error) {
         // Handle errors
         res.status(500).json({ message: "Failed to get notifications!" });
