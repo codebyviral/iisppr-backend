@@ -14,7 +14,7 @@ import reportRoutes from "./Routes/ReportRoutes.js"; //Importing report generati
 import submitreportroutes from "./Routes/SubmitreportRoutes.js";
 import projectRoutes from "./Routes/ProjectRoutes.js";
 import tasksubmitroutes from "./Routes/Tasksubmitionroutes.js";
-import notificationRouter from "./Routes/NotificationRouter.js";
+import notificationRouter from "./Routes/notificationRouter.js";
 // Loading environment variables from .env file
 dotenv.config();
 
