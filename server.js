@@ -15,6 +15,8 @@ import submitreportroutes from "./Routes/SubmitreportRoutes.js";
 import projectRoutes from "./Routes/ProjectRoutes.js";
 import tasksubmitroutes from "./Routes/Tasksubmitionroutes.js";
 import notificationRouter from "./Routes/notificationRouter.js";
+
+import LeaveRoutes from "./Routes/Leave.js"
 // Loading environment variables from .env file
 dotenv.config();
 
@@ -46,7 +48,7 @@ app.use("/project", projectRoutes)
 app.use("/weeklystatus", submitreportroutes);
 app.use("/", tasksubmitroutes);
 app.use("/send", notificationRouter)
-
+app.use("/",LeaveRoutes)
 
 // Predefined responses for chatbot functionality
 const responses = {
