@@ -32,7 +32,10 @@ export const postLeaveApplication = async (req, res) => {
 // GET route to fetch all leave applications for admin
 export const getAllLeaveApplications = async (req, res) => {
   try {
-    const leaves = await Leave.find(); // Optionally, filter by status or other parameters
+    const leaves = await Leave.find()
+    .populate('internid', 'name email') // Populate 'userId' with only 'name' and 'email' fields from User
+    .exec(); // Optionally, filter by status or other parameters
+
     res.status(200).json({ leaves });
   } catch (error) {
     console.error('Error fetching leave applications:', error);
