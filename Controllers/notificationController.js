@@ -49,4 +49,25 @@ const getNotifcation = async (req, res) => {
     }
 }
 
-export { sendNotification, getNotifcation };
+const deleteNotification = async (req, res) => {
+    const { notificationId } = req.query;
+    const { userId } = req.query;
+    try {
+        if (!notificationId || !userId) {
+            return res.status(400).json({ message: "Invalid request: Missing notificationId or userId." });
+        }
+        await Notification.findByIdAndDelete(notificationId);
+        await User
+            .findByIdAndUpdate(userId, {
+                $pull: { notifications: notificationId }
+            });
+        res.status(200).json({ message: "Notification deleted successfully!" });
+    }
+    catch (error) {
+        res.status(500).json({ message: "Failed to delete notification!" });
+        console.error("Error deleting notification:", error);
+    }
+}
+
+
+export { sendNotification, getNotifcation, deleteNotification };
