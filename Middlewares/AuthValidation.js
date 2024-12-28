@@ -9,8 +9,15 @@ export const signupValidation = (req, res, next) => {
         name: Joi.string().required().messages({
             'string.empty': 'Name is required',
         }),
-        mnumber: Joi.number().min(10).required().messages({
+        mnumber: Joi.number()
+        .integer()
+        .min(6000000000) // Minimum valid mobile number starting with 6
+        .max(9999999999) // Maximum valid 10-digit mobile number
+        .required()
+        .messages({
             'number.base': 'Mobile number must be a valid number',
+            'number.min': 'Mobile number must be at least 10 digits starting with 6-9',
+            'number.max': 'Mobile number must be at most 10 digits',
             'any.required': 'Mobile number is required',
         }),
         email: Joi.string().email().required().messages({

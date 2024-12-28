@@ -1,46 +1,49 @@
 import mongoose from 'mongoose';
 
 const leaveSchema = new mongoose.Schema({
-    internid:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    },
+  internid: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
   leaveType: {
     type: String,
     required: true,
-    enum: ['Sick Leave', 'Personal Leave', 'Vacation', 'Other']
+    enum: ['Sick Leave', 'Personal Leave', 'Vacation', 'Other'],
   },
   startDate: {
     type: Date,
-    required: true
+    required: true,
   },
   endDate: {
     type: Date,
-    required: true
+    required: true,
+  },
+  leaveDates: {
+    type: [Date], // Array of dates covered by this leave
+    default: [],
   },
   reason: {
     type: String,
-    required: true
+    required: true,
   },
   status: {
     type: String,
     enum: ['Pending', 'Approved', 'Rejected'],
-    default: 'Pending'
+    default: 'Pending',
   },
-
   createdAt: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
- 
   updatedBy: {
     type: String,
-    default: null
+    default: null,
   },
   updatedAt: {
     type: Date,
-    default: null
-  }
+    default: null,
+  },
 });
+
 export default mongoose.model('Leave', leaveSchema);
 
