@@ -6,15 +6,25 @@ import axios from 'axios';
 export const postLeaveApplication = async (req, res) => {
   try {
     const { leaveType, startDate, endDate, reason } = req.body;
-    const intern = req.user; // Assuming req.user contains authenticated intern's details
+    const intern = req.user;
 
+    const leaveDates = [];
+    let currentDate = new Date(startDate);
+    const end = new Date(endDate);
+
+    while (currentDate <= end) {
+      leaveDates.push(new Date(currentDate));
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    
     const newLeave = new Leave({
       internid: intern.id,
       leaveType,
       startDate,
       endDate,
+      leaveDates,
       reason,
-      status: 'Pending', // Default status is 'Pending'
+      status: 'Pending',
     });
 
     await newLeave.save();
@@ -28,6 +38,7 @@ export const postLeaveApplication = async (req, res) => {
     res.status(500).json({ message: 'Error submitting leave application', error });
   }
 };
+
 
 // GET route to fetch all leave applications for admin
 export const getAllLeaveApplications = async (req, res) => {
