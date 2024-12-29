@@ -77,6 +77,27 @@ export const startCronJobs = () => {
           .map((date) => new Date(date))
           .sort((a, b) => a - b);
 
+        // 4. Check for missing attendance
+        const attendanceDays = validDates.map(date => date.toISOString().split('T')[0]); // Extract date (YYYY-MM-DD)
+        const todayString = today.toISOString().split('T')[0];
+
+        if (!attendanceDays.includes(todayString)) {
+          // Send notification for missing attendance
+          const missingAttendanceMessage = `You have not marked your attendance for today. Please mark your attendance ASAP.`;
+          const missingAttendanceNotification = new Notification({
+            userId: userId,
+            message: missingAttendanceMessage,
+            type: 'Reminder',
+          });
+
+          await missingAttendanceNotification.save();
+          await User.findByIdAndUpdate(userId, {
+            $push: { notifications: missingAttendanceNotification._id },
+          });
+
+          console.log(`Notification sent to user with ID ${userId} for missing attendance.`);
+        }
+
         // Check for consecutive absences
         let consecutiveAbsences = 0;
         for (let i = 1; i < validDates.length; i++) {
@@ -89,6 +110,22 @@ export const startCronJobs = () => {
           }
 
           if (consecutiveAbsences === 2) {
+            // Send notification before account deletion
+            const accountDeletionMessage = `Your account will be deleted due to 2 consecutive absences. Please contact the administrator if you have any concerns.`;
+            const accountDeletionNotification = new Notification({
+              userId: userId,
+              message: accountDeletionMessage,
+              type: 'Warning',
+            });
+
+            await accountDeletionNotification.save();
+            await User.findByIdAndUpdate(userId, {
+              $push: { notifications: accountDeletionNotification._id },
+            });
+
+            console.log(`Notification sent to user with ID ${userId} before account deletion.`);
+
+            // Delete the user after sending the notification
             const deleteResult = await User.deleteOne({ _id: userId, role: 'intern' });
             if (deleteResult.deletedCount > 0) {
               console.log(`User with ID ${userId} deleted for 2 consecutive absences.`);
