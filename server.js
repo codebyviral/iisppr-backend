@@ -24,7 +24,7 @@ app.use(express.json());
 app.use("/uploads", express.static("projectimageuploads"));
 
 const corsOptions = {
-	origin: ['https://iisppr-intern-management.vercel.app', 'http://localhost:5173'],
+	origin: ['https://scaleindia.org.in', 'http://localhost:5173'],
 	methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH', 'HEAD'],
 	credentials: true,
 	allowedHeaders: ['Content-Type', 'Authorization']
