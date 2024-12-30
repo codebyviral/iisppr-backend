@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllUsers, updateUser, deleteUser } from "../Controllers/admincontroller.js";
+import { getAllUsers, updateUser, deleteUser,uploadProfilePicture } from "../Controllers/admincontroller.js";
 
 const router = express.Router();
 
@@ -7,7 +7,7 @@ const router = express.Router();
 router.get("/allusers", getAllUsers);
 
 // Route to update a user
-router.put("/update/:userid", updateUser);
+router.put("/update/:userid",uploadProfilePicture, updateUser);
 
 // Route to delete a user
 router.delete("/delete/:userid", deleteUser);
