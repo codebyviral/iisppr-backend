@@ -10,7 +10,7 @@ const UserSchema = new Schema({
 		trim: true,
 	},
 	mnumber: {
-		type: Number,
+		type: String,
 		required: true,
 	},
 	email: {
@@ -34,7 +34,7 @@ const UserSchema = new Schema({
 		type: Boolean,
 		default: false,
 	},
-	githubURL: {
+	profilePicture: {
 		type: String,
 		default: "",
 	},
