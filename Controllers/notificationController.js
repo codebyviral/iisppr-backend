@@ -69,5 +69,26 @@ const deleteNotification = async (req, res) => {
     }
 }
 
+const notifyAll = async (req, res) => {
+    const { status, message } = req.body;
+    const users = await User.find();
+    try {
+        users.forEach(user => {
+            const notification = new Notification({
+                userId: user._id,
+                message,
+                type: status
+            });
+            notification.save();
+            user.notifications.push(notification._id);
+            user.save();
+        });
+        res.status(200).json({ message: "Notifications sent successfully!" });
+        console.log("Notifications sent successfully!");
+    } catch (error) {
+        res.status(500).json({ message: "Failed to send notifications!" });
+        console.error("Error sending notifications:", error);
+    }
+}
 
-export { sendNotification, getNotifcation, deleteNotification };
+export { sendNotification, getNotifcation, deleteNotification, notifyAll };
