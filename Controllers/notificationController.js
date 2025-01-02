@@ -34,6 +34,26 @@ const sendNotification = async (req, res) => {
     }
 };
 
+const sendNotificationToSingleUser = async (req, res) => {
+    const { userId, status, message } = req.body;
+    try {
+        const notification = new Notification({
+            userId,
+            message,
+            type: status
+        });
+        await notification.save();
+        await User.findByIdAndUpdate(userId, {
+            $push: { notifications: notification._id }
+        });
+        res.status(200).json({ message: "Notification sent successfully!" });
+        console.log("Notification sent successfully!");
+    } catch (error) {
+        res.status(500).json({ message: "Failed to send notification`!" });
+        console.error("Error sending notification:", error);
+    }
+}
+
 const getNotifcation = async (req, res) => {
     // Get userId from query parameters
     const { userId } = req.query;
@@ -91,4 +111,4 @@ const notifyAll = async (req, res) => {
     }
 }
 
-export { sendNotification, getNotifcation, deleteNotification, notifyAll };
+export { sendNotification, sendNotificationToSingleUser, getNotifcation, deleteNotification, notifyAll };
